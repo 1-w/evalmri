@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Another Tool.</title>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content=" script-src 'self' 'unsafe-inline';"
+    />
+    <link rel="stylesheet" href="css/fcdeval.css" />
+    <script src="fcdeval/fcdeval.js"></script>
+    <!--script src="brain_display/bbb/bbv.js"></script-->
+  </head>
+  <body class="theme-normal">
+    <div id="header">
+      FCD Detection Tool
+      <span id="version"></span>
+    </div>
+    <div id="main">
+      <div id="welcome" class="content hide show" data-id="1">
+        <div>
+          <ul>
+            <li class="button">
+              <label for="dataDir">Datensatz Dateipfad:</label>
+              <input type="text" id="datasetPath" disabled />
+              <button id="dataDir" onclick="openDatasetFile()">
+                Datensatz auswählen
+              </button>
+            </li>
+
+            <li>
+              <label for="userId">Benutzer ID</label>
+              <!-- Woher kommt userID -->
+              <input
+                type="text"
+                list="userIds"
+                id="userId"
+                onchange="preloadUserData() "
+              />
+              <datalist id="userIds"></datalist>
+            </li>
+          </ul>
+        </div>
+        <div id="optional">
+          Optionale Benutzerinformationen:
+          <form>
+            <ul>
+              <li>
+                <label for="position">Position</label>
+                <select id="position">
+                  <option>-</option>
+                  <option>Student/Studentin</option>
+                  <option>Assistenzärztin/Assistenzarzt</option>
+                  <option>Facharzt/Fachärztin</option>
+                  <option>Oberärztin/Oberarzt</option>
+                  <option>Chefarzt/Chefärztin</option>
+                </select>
+              </li>
+              <li>
+                <label for="expRad">Jahre Erfahrung Radiologie</label>
+                <input type="number" id="expRad" />
+              </li>
+              <li>
+                <label for="expNRad">Jahre Erfahrung Neuroradiologie</label>
+                <input type="number" id="expNRad" />
+              </li>
+              <li>
+                <label for="expFCD">Erfahrung mit FCDs</label>
+                <input
+                  type="range"
+                  id="expFCDvalue"
+                  value="0"
+                  step="1"
+                  min="0"
+                  max="3"
+                  onclick="outputUpdateExpFCD(value)"
+                  list="expFCDsteplist"
+                />
+                <datalist id="expFCDsteplist">
+                  <option>0</option>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                </datalist>
+                <label for="expFCDvalue" id="expFCDoutput">Keine</label>
+              </li>
+            </ul>
+          </form>
+        </div>
+        <!-- Start button click greift auf subject ID Liste zu und laed nachstes subject-->
+        <button id="start">Start</button>
+      </div>
+      <div id="inputSubject" class="content hide" data-id="2">
+        <div>
+          <!-- subject ID aus Liste, store pointer zum aktuellen eintrag-->
+          Bitte öffnen Sie Subjekt:
+          <span id="patientID"></span>
+        </div>
+        <button
+          class="action"
+          id="openingNext"
+          onclick="handleOpenPatient(event)"
+        >
+          Weiter
+        </button>
+        <!-- <button
+          class="action"
+          id="openingPrev"
+          onclick="previousContent(event)"
+        >
+          Zurueck
+        </button> -->
+      </div>
+      <div id="decisionCertainty" class="content hide" data-id="3">
+        Handelt es sich um eine*n Proband*in oder um eine*n Patient*in?
+        <div class="slidecontainer">
+          <span>Proband*in</span>
+          <input
+            type="range"
+            min="0"
+            max="10"
+            value="5"
+            step="1"
+            class="slider"
+            id="certaintyProbPat"
+            onclick="outputUpdateCertaintyProbPat(value)"
+            list="decisionCertaintysteplist"
+          />
+          <output
+            value="5"
+            for="certaintyProbPat"
+            id="certaintyProbPatOutput"
+          ></output>
+          <datalist id="decisionCertaintysteplist">
+            <option>0</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+          </datalist>
+          <span>Patient*in</span>
+        </div>
+        <!-- Bei weiter click muss evaluiert werden, ob die Wahl korrekt war-->
+        <button id="recogPatientNext" onclick="checkCertaintyChoice(event)">
+          Weiter
+        </button>
+        <!-- <button id="recogPatientBack" onclick="previousContent(event)">
+          Zurück
+        </button> -->
+      </div>
+      <div id="youreWRONG" class="content hide" data-id="10">
+        <div>Die Auswahl war falsch.</div>
+        <button
+          class="action"
+          id="wrongChoiceNext"
+          onclick="targetContent(event,2,true)"
+        >
+          Nächstes Subjekt
+        </button>
+      </div>
+      <div id="youreRIGHT" class="content hide" data-id="20">
+        <div>Korrekt!</div>
+        <button
+          class="action"
+          id="rightChoiceNext"
+          onclick="targetContent(event,2,true)"
+        >
+          Nächstes Subjekt
+        </button>
+      </div>
+      <div id="reviewIntro" class="content hide" data-id="30">
+        <div>
+          Im Folgenden werden Patient*innen gezeigt, die zuvor fälschlicherweise
+          als Proband*innen bewertet wurden. Bitte gehen Sie wie gehabt vor, und
+          versuchen Sie, eine epileptogene Läsion zu finden.
+        </div>
+        <button
+          class="action"
+          id="reviewIntroNext"
+          onclick="targetContent(event,2,false)"
+        >
+          Weiter
+        </button>
+      </div>
+      <div id="lesionDetection" class="content hide withRoi" data-id="4">
+        <div id="NE" class="detection">
+          <div id="xspace_container" class="volume-container"></div>
+        </div>
+        <div id="NW" class="detection">
+          <div id="zspace_container" class="volume-container"></div>
+        </div>
+        <div id="SE" class="detection">
+          <div>Bitte zeichnen Sie die vermutete Läsion ein.</div>
+          <div id="brainviewer">
+            <div>
+              <ul class="mri-mods">
+                <li>
+                  <input
+                    type="radio"
+                    id="t1"
+                    name="image"
+                    value="T1"
+                    onchange="switchActiveVolume()"
+                    checked
+                  />
+                  <label for="t1">T1w</label>
+                </li>
+                <li>
+                  <input
+                    type="radio"
+                    id="flair"
+                    onchange="switchActiveVolume()"
+                    name="image"
+                    value="FLAIR"
+                  />
+                  <label for="flair">FLAIR</label>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <ul>
+                <li>
+                  <label for="xspace">xspace</label>
+                  <input type="number" step="1" id="xspace" />
+                </li>
+                <li>
+                  <label for="yspace">yspace</label>
+                  <input type="number" step="1" id="yspace" />
+                </li>
+                <li>
+                  <label for="zspace">zspace</label>
+                  <input type="number" step="1" id="zspace" />
+                </li>
+                <li>
+                  <button
+                    id="updateVolumePosition"
+                    class="action"
+                    onclick="updateBrowserPosition()"
+                  >
+                    Ansicht updaten
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <span>Nicht Sicher</span>
+              <input
+                type="range"
+                min="0"
+                max="10"
+                value="5"
+                step="1"
+                class="slider"
+                id="certaintyRoi"
+                onclick="outputUpdateCertaintyRoi(value)"
+                list="certaintyRoisteplist"
+              />
+              <output for="certaintyRoi" id="certaintyRoiOutput"></output>
+              <datalist id="certaintyRoisteplist">
+                <option>0</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+              </datalist>
+              <span>Sehr Sicher</span>
+            </div>
+            <div id="buttons">
+              <button id="resetView" class="action bw-controls" id="reset">
+                Ansicht zurücksetzen
+              </button>
+              <button id="removeRoi" class="action bw-controls" id="remove">
+                ROI entfernen
+              </button>
+            </div>
+          </div>
+          <!--this content will be displayed again when in revision, so keep that as a variable-->
+          <div>
+            <button
+              id="locateLesionNext"
+              class="action"
+              onclick="lesionDetectionNext(event)"
+            >
+              Weiter
+            </button>
+          </div>
+        </div>
+        ​
+        <div id="SW" class="detection">
+          <div id="yspace_container" class="volume-container"></div>
+        </div>
+
+        <!-- <button
+          id="locateLesionPrev"
+          class="action"
+          onclick="previousContent(event)"
+        >
+          Zurück
+        </button> -->
+      </div>
+      <div id="clinicalInformation" class="content hide" data-id="5">
+        <div>
+          <p>
+            Die Semiologie des beobachteten Anfallsgeschehens deutet am ehesten
+            auf einen Ursprung:
+            <span id="semiology"></span>
+          </p>
+          <p>
+            Ein iktales EEG ergab potenziell epileptogene Foki an folgenden
+            Lokalisationen:
+            <span id="ictaleeg"></span>
+          </p>
+          <p>
+            Ein interiktales EEG ergab potenziell epileptogene Foki an folgenden
+            Lokalisationen:
+            <span id="interictaleeg"></span>
+          </p>
+          <p>
+            Die neuropsychologische Untersuchung ergab Hinweise auf
+            Funktionseinschränkungen:
+            <span id="neuropsych"></span>
+          </p>
+        </div>
+        <button id="revision" class="action" onclick="revision(event)">
+          Revision
+        </button>
+        <button
+          id="nextPatient"
+          class="action"
+          onclick="targetContent(event,2,true)"
+        >
+          Nächstes Subjekt
+        </button>
+      </div>
+      <div id="finish" class="content hide" data-id="999">
+        Fertig! Vielen Dank!!!
+      </div>
+    </div>
+    <div id="footer">
+      <!-- button pause stoppt Zeit, alles graut aus, und wird zu "weiter machen"-->
+      <button id="pause" class="action" onclick="pause()">Pausieren</button>
+      <!-- button pause stoppt Zeit, geht auf seite null, speichert?-->
+      <button id="finish" class="action" onclick="finish()">Beenden</button>
+    </div>
+  </body>
+</html>

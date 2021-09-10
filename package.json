@@ -1,0 +1,112 @@
+{
+  "name": "fcdeval",
+  "productName": "fcdeval",
+  "version": "1.0.2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/https://gitlab.com/lab_tni/projects/fcdEval.git"
+  },
+  "dataVersion": "1.1.0",
+  "description": "Evaluate FCD detection performance of medical experts.",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\"",
+    "make": "run-scrip make:mac make:linux make:windows",
+    "make:mac": "electron-forge make --platform=darwin --prune=true --asar=true --overwrite",
+    "make:linux": "electron-forge make --platform=linux --arch=x64 --prune=true --asar=false --overwrite",
+    "make:windows": "electron-forge make --platform=win32 --arch=x64  --prune=true --asar=false --overwrite"
+  },
+  "keywords": [],
+  "author": "Lennart Walger <lennart.walger@ukbonn.de>",
+  "license": "MIT",
+  "config": {
+    "forge": {
+      "make_targets": {
+        "win32": [
+          "zip"
+        ],
+        "darwin": [
+          "zip",
+          "dmg "
+        ],
+        "linux": [
+          "deb"
+        ]
+      },
+      "packagerConfig": {
+        "icon": "./assets/eval_logo"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin",
+            "win32"
+          ],
+          "config": {
+            "icon": "./assets/eval_logo"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {
+            "options": {
+              "maintainer": "Lennart Walger",
+              "homepage": "https://www.translationalneuroimaging.de"
+            },
+            "icon": "./assets/eval_logo.png"
+          }
+        }
+      ]
+    },
+    "electronPackagerConfig": {
+      "packageManager": "npm",
+      "icon": "./assets/eval_logo",
+      "appCopyright": "LaB",
+      "ignore": [
+        ".+.test.js",
+        ".*.env",
+        ".eslintrc",
+        ".gitignore",
+        "README.md",
+        "yarn.lock",
+        ".jshintrc",
+        ".babelrc",
+        "out",
+        ".vscode"
+      ]
+    }
+  },
+  "dependencies": {
+    "@electron/remote": "^1.2.0",
+    "amd-loader": "^0.0.8",
+    "csv-parse": "^4.16.0",
+    "electron-json-storage": "^4.5.0",
+    "electron-squirrel-startup": "^1.0.0",
+    "jquery": "^3.6.0",
+    "jquery-ui-dist": "^1.12.1",
+    "moment": "^2.29.1",
+    "pako": "^2.0.3",
+    "resize-observer": "^1.0.2",
+    "zlib": "^1.0.5"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.57",
+    "@electron-forge/maker-deb": "^6.0.0-beta.57",
+    "@electron-forge/maker-dmg": "^6.0.0-beta.57",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.57",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.57",
+    "@electron-forge/maker-zip": "^6.0.0-beta.57",
+    "amd-loader": "^0.0.8",
+    "electron": "^13.1.6",
+    "jquery": "^3.6.0",
+    "jquery-ui-dist": "^1.12.1"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/https://gitlab.com/lab_tni/projects/fcdEval/issues"
+  },
+  "homepage": "https://gitlab.com/https://gitlab.com/lab_tni/projects/fcdEval#readme"
+}

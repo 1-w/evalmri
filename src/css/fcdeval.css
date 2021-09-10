@@ -1,0 +1,207 @@
+.theme-normal {
+  --color-bg: rgb(65, 65, 65);
+  --color-secondary: rgba(0, 0, 0, 0.7);
+  --color-accent: rgb(7, 47, 65);
+  --color-accent2: rgb(14, 95, 129);
+  --color-accent3: rgb(21, 142, 194);
+  --color-accent4: rgb(123, 207, 244);
+  --color-accent5: rgb(243, 177, 69);
+  --font-color: rgb(255, 255, 255);
+}
+
+body {
+  background-color: var(--color-bg);
+  font-family: "Lucida Grande, Verdana, Lucida, Helvetica, Arial, sans-serif";
+  color: var(--font-color);
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+}
+
+.content {
+  /*width: 100%;*/
+  min-height: 100px;
+  background-color: var(--color-bg);
+}
+
+.hide {
+  /*width: 100%;*/
+  display: none;
+  margin: 0;
+  padding: 10px 10px;
+}
+
+.show {
+  /*width: 100%;*/
+  margin: 0;
+  overflow: hidden;
+  padding: 10px 10px;
+  display: block;
+}
+
+span {
+  padding: 10px 10px;
+}
+
+p {
+  padding: 10px 10px;
+  background-color: var(--color-bg);
+}
+
+div {
+  background-color: var(--color-bg);
+  /*text-align: left;*/
+}
+
+ul {
+  list-style: none;
+  padding: 1em;
+  margin: 1em;
+}
+
+form li + li {
+  margin-top: 1em;
+}
+
+div li + li {
+  margin-top: 1em;
+}
+
+label {
+  /* Uniform size & alignment */
+  display: inline-block;
+  text-align: right;
+}
+
+input,
+textarea {
+  /* To make sure that all text fields have the same font settings
+     By default, textareas have a monospace font */
+  font: 1em sans-serif;
+
+  /* Uniform text field size */
+  width: 200px;
+  box-sizing: border-box;
+
+  /* Match form field borders */
+  border: 1px solid #999;
+}
+
+input:focus,
+textarea:focus {
+  /* Additional highlight for focused elements */
+  border-color: #000;
+}
+
+.button {
+  /* Align buttons with the text fields */
+  padding-left: 0px; /* same size as the label elements */
+}
+
+button {
+  /* This extra margin represent roughly the same space as the space
+     between the labels and their text fields */
+  margin-left: 0.5em;
+}
+
+.disabledContent {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.mri-mods {
+  list-style-type: none;
+  margin: 25px 0 0 0;
+  padding: 0;
+}
+
+.mri-mods li {
+  float: left !important;
+  margin: 0 5px 0 0;
+  width: 100px;
+  height: 40px;
+  position: relative;
+}
+
+.mri-mods label,
+.mri-mods input {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.mri-mods input[type="radio"] {
+  opacity: 0.01;
+}
+
+.mri-mods input[type="radio"]:checked + label,
+.Checked + label {
+  background: var(--color-accent3);
+  color: var(--color-secondary);
+}
+
+.mri-mods label {
+  padding: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  z-index: 90;
+}
+
+.mri-mods label:hover {
+  background: #ddd;
+}
+
+#NW {
+  top: 0;
+  left: 0;
+  background: var(--color-bg);
+}
+#NE {
+  top: 0;
+  left: 50%;
+  background: var(--color-bg);
+}
+#SW {
+  top: 50%;
+  left: 0;
+  background: var(--color-bg);
+}
+#SE {
+  top: 50%;
+  left: 50%;
+  background: var(--color-bg);
+}
+
+#SE div {
+  position: relative;
+  display: block !important;
+  margin-top: 4px;
+  padding: 4px;
+}
+
+#SE li {
+  list-style: none;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+.detection {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+}
+#xspace_container {
+  width: 100%;
+  height: 100%;
+}
+#xspace_container {
+  width: 100%;
+  height: 100%;
+}
+#xspace_container {
+  width: 100%;
+  height: 100%;
+}

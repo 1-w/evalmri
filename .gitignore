@@ -1,0 +1,6 @@
+node_modules
+.vscode
+out
+data/subjects/*
+data/eval/*
+package-lock.json
