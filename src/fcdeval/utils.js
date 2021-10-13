@@ -496,7 +496,6 @@ module.exports = function () {
   };
   // handle manual position input
   this.updateBrowserPosition = function () {
-
     let activeVolume =
       window.BrainBrowser.volumeviewer.volumes[
         window.BrainBrowser.volumeviewer.active_volume_idx
@@ -585,7 +584,17 @@ module.exports = function () {
     if (certainty === "") {
       alert("Bitte geben Sie an wie sicher Sie bei der Detektion sind.");
     } else {
-      nextContent(event);
+      let roi =
+        window.BrainBrowser.volumeviewer.ROIs[
+          window.BrainBrowser.volumeviewer.KeyActiveROI
+        ];
+      if (roi["activeCorner"] == -2) {
+        alert(
+          "Bitte zeichnen Sie mit der rechten Maustaste in jeder Ansicht ein Rechteck um die gesamte Lesion"
+        );
+      } else {
+        nextContent(event);
+      }
     }
   };
 
